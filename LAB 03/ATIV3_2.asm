@@ -1,0 +1,100 @@
+TITLE Numero
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    MSG1 DB "DIGITE UM CARACTERE:$"
+    NUM  DB 10,13,"O CARACTERE E UM NUMERO$"
+    LET  DB 10,13,"O CARACTERE E UMA LETRA$"
+    DES  DB 10,13,"O CARACTERE E DESCONHECIDO$"
+
+
+.CODE
+    MAIN PROC
+    ;ACESSOS PARA AS VARIAVEIS 
+    MOV AX,@DATA
+    MOV DS,AX
+
+    ;EXIBE MSG1
+    MOV AH,9
+    MOV DX,OFFSET MSG1
+    INT 21H
+
+    ;LE O CARACTERE DIGITADO/SALVA EM AL/MUDA PARA BL
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+
+    ;NUMERO
+        ;COMPARA COM 48(0 EM ASCII)
+        CMP BL,48
+
+        ;SE FOR MENOR QUE 48, VAI PARA LABEL NUME   
+        JB DESC 
+
+        ;COMPARA COM 57(9 EM ASCII)
+        CMP BL,57
+
+        ;SE FOR MAIOR QUE 57, VAI PARA LABEL NUME  
+        JA LETRA_MAIUSCULA
+
+        ;EXIBE NUM
+        MOV AH,9
+        MOV DX,OFFSET NUM
+        INT 21H
+        JMP FIM
+        
+    LETRA_MAIUSCULA:
+    ;NUMERO
+        ;COMPARA COM 48(0 EM ASCII)
+        CMP BL,65
+
+        ;SE FOR MENOR QUE 48, VAI PARA LABEL NUME   
+        JB DESC
+
+        ;COMPARA COM 57(9 EM ASCII)
+        CMP BL,90
+
+        ;SE FOR MAIOR QUE 57, VAI PARA LABEL NUME  
+        JA LETRA_MINUSCULA
+
+        ;SE FOR MAIOR QUE 57, VAI PARA LABEL NUME  
+        ;EXIBE LET
+        MOV AH,9
+        MOV DX,OFFSET LET
+        INT 21H
+        JMP FIM
+
+    LETRA_MINUSCULA:
+    ;NUMERO
+        ;COMPARA COM 48(0 EM ASCII)
+        CMP BL,97
+
+        ;SE FOR MENOR QUE 48, VAI PARA LABEL NUME   
+        JB DESC
+
+        ;COMPARA COM 57(9 EM ASCII)
+        CMP BL,122
+
+        ;SE FOR MAIOR QUE 57, VAI PARA LABEL NUME  
+        JA DESC
+
+        ;SE FOR MAIOR QUE 57, VAI PARA LABEL NUME  
+        ;EXIBE LET
+        MOV AH,9
+        MOV DX,OFFSET LET
+        INT 21H
+        JMP FIM
+
+    DESC:
+        ;EXIBE DES
+        MOV AH,9
+        MOV DX,OFFSET DES
+        INT 21H
+
+    FIM:
+        ;FIM DO POGRAMA
+        MOV AH, 4CH
+        INT 21H
+    MAIN ENDP 
+END MAIN
